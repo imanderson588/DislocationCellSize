@@ -8,4 +8,4 @@
 module load lammps
 module load openmpi
 
-bash apply_stress.sh
+bash applystress.sh
