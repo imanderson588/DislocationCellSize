@@ -72,14 +72,7 @@ fix_modify forcebottom energy no
 
 reset_timestep 0
 
-fix extra all print 1 """
-- stress: ${sigxy}
-  energy: $(pe)
-""" append energy.yaml screen no title ""
-
-print "${surface_size}"
-print "${surface_area}"
-print "${ntop}"
-print "${nbottom}"
+if "$(universe/universe) == 0" then &
+  "print ' - stress: ${sigxy} energy: $(pe)' append energy.yaml screen no"
 
 run 0
