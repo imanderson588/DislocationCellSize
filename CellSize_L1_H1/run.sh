@@ -6,6 +6,6 @@
 #SBATCH --time=5
 
 module load lammps
-module load openmpi-5.0.6
+module load openmpi
 
 bash apply_stress.sh
