@@ -64,7 +64,7 @@ compute        peratom all pe/atom
 thermo 1 
 thermo_style custom step pe lx ly lz press pxy pyy pzz cellalpha cellbeta cellgamma
 min_style cg
-minimize 1e-12 1e-5 10000 10000
+minimize 0 1e-5 10000 10000
 
 
 fix_modify forcetop energy no
@@ -72,7 +72,10 @@ fix_modify forcebottom energy no
 
 reset_timestep 0
 
-if "$(universe/universe) == 0" then &
-  "print ' - stress: ${sigxy} energy: $(pe)' append energy.yaml screen no"
+fix extra all print 1 """
+- stress: ${sigxy}
+  energy: $(pe)
+""" append energy.yaml screen no title ""
+
 
 run 0
