@@ -72,9 +72,12 @@ fix_modify forcebottom energy no
 
 reset_timestep 0
 
+# 1. Define the normalized energy variable
+variable pe_per_atom equal pe/atoms
+
+# 2. Print the variable to your YAML file
 fix extra all print 1 """
-- stress: ${sigxy}
-  energy: $(pe)
+- energy: ${pe_per_atom}
 """ append energy.yaml screen no title ""
 
 print "${surface_size}"
