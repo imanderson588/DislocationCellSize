@@ -8,8 +8,10 @@ for dir in dirs:
     with open(f"{dir}/energy.yaml") as f:
         data = yaml.load(f, Loader=yaml.FullLoader)
     fig, ax = plt.subplots()
-    for i in range(0, len(data)):
-        ax.scatter(data[i]["stress"], data[i]["energy"], c='black')
+    stresses = [d["stress"] for d in data if "stress" in d]
+    energies = [d["energy"] for d in data if "energy" in d]
+    for s, e in zip(stresses, energies):
+        ax.scatter(s, e, c='black')
 
 
 plt.ylabel("Total Energy")
