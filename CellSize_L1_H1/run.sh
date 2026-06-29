@@ -7,8 +7,6 @@
 
 module purge 
 
-module load gnu13
-module load openmpi
-export PATH=$PATH:/home/C836791915/lammps_compute_PACE/build/
+module load lammps/2025-ace-snap-meam
 
 bash applystress.sh

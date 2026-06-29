@@ -5,7 +5,8 @@
 #SBATCH --ntasks=64
 #SBATCH --time=5
 
-module load lammps
-module load openmpi-5.0.6
+module purge 
+
+module load lammps/2025-ace-snap-meam
 
 bash apply_stress.sh
