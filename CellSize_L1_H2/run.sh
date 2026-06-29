@@ -5,8 +5,9 @@
 #SBATCH --ntasks=64
 #SBATCH --time=5
 
-module purge 
+module load gnu13
+module load openmpi
 
-module load lammps/2025-ace-snap-meam
+export PATH=$PATH:/home/C836791915/lammps_compute_PACE/build/
 
 bash apply_stress.sh

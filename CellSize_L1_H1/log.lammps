@@ -21,7 +21,7 @@ Reading data file ...
   23952 atoms
   reading velocities ...
   23952 velocities
-  read_data CPU = 0.077 seconds
+  read_data CPU = 0.078 seconds
 
 variable surface_area equal $(lx)*$(ly)
 variable surface_area equal 21.824953608198121913*$(ly)
@@ -112,9 +112,9 @@ Per MPI rank memory allocation (min/avg/max) = 15.73 | 15.97 | 16.22 Mbytes
    Step         PotEng           Lx             Ly             Lz           Press           Pxy            Pyy            Pzz         CellAlpha       CellBeta      CellGamma   
          0  -198655.45      21.824954      151.20771      80.011936     -25829.347      0.00050148423 -58567.942     -0.0083210352   90             90             90           
          1  -198655.45      21.824954      151.20771      80.011936     -25829.347      0.00049752083 -58567.942     -0.0083205945   90             90             90           
-Loop time of 0.171415 on 6 procs for 1 steps with 23952 atoms
+Loop time of 0.170532 on 6 procs for 1 steps with 23952 atoms
 
-98.9% CPU use with 6 MPI tasks x no OpenMP threads
+99.3% CPU use with 6 MPI tasks x no OpenMP threads
 
 Minimization stats:
   Stopping criterion = force tolerance
@@ -128,12 +128,12 @@ Minimization stats:
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 0.16599    | 0.16684    | 0.17026    |   0.4 | 97.33
+Pair    | 0.16401    | 0.16585    | 0.16983    |   0.5 | 97.25
 Neigh   | 0          | 0          | 0          |   0.0 |  0.00
-Comm    | 0.00045538 | 0.003821   | 0.0045828  |   2.4 |  2.23
+Comm    | 0.00023742 | 0.0042217  | 0.006053   |   2.8 |  2.48
 Output  | 0          | 0          | 0          |   0.0 |  0.00
-Modify  | 5.6208e-05 | 5.8792e-05 | 6.1126e-05 |   0.0 |  0.03
-Other   |            | 0.0006979  |            |       |  0.41
+Modify  | 5.7791e-05 | 5.9806e-05 | 6.325e-05  |   0.0 |  0.04
+Other   |            | 0.0004037  |            |       |  0.24
 
 Nlocal:           3992 ave        4096 max        3868 min
 Histogram: 1 1 0 0 1 0 1 0 0 2
@@ -170,9 +170,9 @@ WARNING: No fixes with time integration, atoms won't move (src/verlet.cpp:60)
 Per MPI rank memory allocation (min/avg/max) = 14.6 | 14.85 | 15.1 Mbytes
    Step         PotEng           Lx             Ly             Lz           Press           Pxy            Pyy            Pzz         CellAlpha       CellBeta      CellGamma   
          0  -198655.45      21.824954      151.20771      80.011936     -25829.347      0.00049752083 -58567.942     -0.0083205945   90             90             90           
-Loop time of 1.10487e-05 on 6 procs for 0 steps with 23952 atoms
+Loop time of 1.07568e-05 on 6 procs for 0 steps with 23952 atoms
 
-60.3% CPU use with 6 MPI tasks x no OpenMP threads
+57.3% CPU use with 6 MPI tasks x no OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
@@ -182,7 +182,7 @@ Neigh   | 0          | 0          | 0          |   0.0 |  0.00
 Comm    | 0          | 0          | 0          |   0.0 |  0.00
 Output  | 0          | 0          | 0          |   0.0 |  0.00
 Modify  | 0          | 0          | 0          |   0.0 |  0.00
-Other   |            | 1.105e-05  |            |       |100.00
+Other   |            | 1.076e-05  |            |       |100.00
 
 Nlocal:           3992 ave        4096 max        3868 min
 Histogram: 1 1 0 0 1 0 1 0 0 2
