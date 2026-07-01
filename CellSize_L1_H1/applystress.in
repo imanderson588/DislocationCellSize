@@ -61,10 +61,12 @@ pair_coeff * * ../library.meam Ta C ../TaC.meam Ta C
 compute        peratom all pe/atom
 
 
+
+
 thermo 1 
 thermo_style custom step pe lx ly lz press pxy pyy pzz cellalpha cellbeta cellgamma
 min_style cg
-minimize 0 1e-5 10000 10000
+minimize 0 1e-10 10000 10000
 
 
 fix_modify forcetop energy no
@@ -80,6 +82,8 @@ fix extra all print 1 """
 - stress: ${sigxy}
 - energy: ${pe_per_atom}
 """ append energy.yaml screen no title ""
+
+dump            1 all custom 1 dump/dump.* id type x y z
 
 
 run 0
