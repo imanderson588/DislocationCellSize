@@ -19,6 +19,11 @@ compute peratom all pe/atom
 # Store initial relaxed positions for restoration each iteration (N=0: store once at definition)
 fix store_initial all store/state 0 x y z
 
+# Atom-style variables to expose per-atom stored coordinates for use in set command
+variable stored_x atom f_store_initial[1]
+variable stored_y atom f_store_initial[2]
+variable stored_z atom f_store_initial[3]
+
 variable mpa_conversion equal 6.2415e-6
 variable surface_area equal lx*ly
 
@@ -45,7 +50,7 @@ variable stress index 200 250 300 350 400 425 450 500 550
 label loop
 
 # Restore initial atomic positions before each minimization
-set group all x f_store_initial[1] y f_store_initial[2] z f_store_initial[3]
+set group all x v_stored_x y v_stored_y z v_stored_z
 
 # Per-iteration force variables (deleted at end of loop body)
 variable fconv    equal v_stress*v_surface_area*v_mpa_conversion
