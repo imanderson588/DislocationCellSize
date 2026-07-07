@@ -57,8 +57,8 @@ variable fconv    equal v_stress*v_surface_area*v_mpa_conversion
 variable fval_top equal  v_fconv/v_ntop
 variable fval_bot equal -(v_fconv/v_nbottom)
 
-fix forcetop    top    addforce 0.0 v_fval_top 0.0
-fix forcebottom bottom addforce 0.0 v_fval_bot 0.0
+fix forcetop    top    addforce 0.0 ${fval_top} 0.0
+fix forcebottom bottom addforce 0.0 ${fval_bot} 0.0
 
 fix freeze_top    top    setforce 0 NULL 0
 fix freeze_bottom bottom setforce 0 NULL 0
