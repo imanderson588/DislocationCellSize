@@ -1,90 +1,100 @@
-# ---------- Initialize Simulation --------------------- 
-clear 
-units metal 
-dimension 3 
+# ---------- One-time initialization ---------------------
+clear
+units metal
+dimension 3
 boundary p p s
-atom_style atomic 
+atom_style atomic
 atom_modify map array
-variable sigxy equal ${stress}
-variable mpa_conversion equal 6.2415e-6
-
-
-# ---------- Create Atoms --------------------- 
 
 read_data EdgeRelaxed.lmp
 
-variable surface_area equal $(lx)*$(ly)
-
-variable stress_area equal ${sigxy}*${surface_area}
-variable forceconversion equal ${stress_area}*${mpa_conversion}
-
-variable surface_size equal 5-zlo
-variable z_value equal zhi-${surface_size}
-
-
-
-region bottom block EDGE EDGE EDGE EDGE EDGE 5 units box
-region top block EDGE EDGE EDGE EDGE ${z_value} EDGE units box
-
-group top region top 
-group bottom region bottom 
-
-variable ntop equal count(top)
-variable nbottom equal count(bottom)
-
-
-
-variable forcetop equal ${forceconversion}/${ntop}
-variable forcebot equal ${forceconversion}/${nbottom}
-
-
-
-fix forcetop top addforce  0.0 ${forcetop} 0.0 
-fix forcebottom bottom addforce  0.0 -${forcebot} 0.0 
-
-fix freeze_top top setforce 0 NULL 0
-fix freeze_bottom bottom setforce 0 NULL 0
-
-fix_modify forcetop energy yes
-fix_modify forcebottom energy yes
-
-mass 1 180.9479  # Atomic mass of Ta
-mass 2 12.011    # Atomic mass of C
-
-
-# ---------- Define Interatomic Potential --------------------- 
+mass 1 180.9479
+mass 2 12.011
 
 pair_style meam
 pair_coeff * * ../library.meam Ta C ../TaC.meam Ta C
 
+compute peratom all pe/atom
 
-compute        peratom all pe/atom
+# Store initial relaxed positions for restoration each iteration (N=0: store once at definition)
+fix store_initial all store/state 0 x y z
 
+# Atom-style variables to expose per-atom stored coordinates for use in set command
+variable stored_x atom f_store_initial[1]
+variable stored_y atom f_store_initial[2]
+variable stored_z atom f_store_initial[3]
 
-thermo 1 
+variable mpa_conversion equal 6.2415e-6
+variable surface_area equal lx*ly
+
+# Geometry: preserve original asymmetric-corrected layer thickness
+variable surface_size equal 5-zlo
+variable z_value equal zhi-v_surface_size
+
+region bottom block EDGE EDGE EDGE EDGE EDGE 5 units box
+region top block EDGE EDGE EDGE EDGE ${z_value} EDGE units box
+
+group top region top
+group bottom region bottom
+
+variable ntop equal count(top)
+variable nbottom equal count(bottom)
+
+thermo 1
 thermo_style custom step pe lx ly lz press pxy pyy pzz cellalpha cellbeta cellgamma
 min_style cg
+
+# ---------- Loop over stress values ---------------------
+variable stress index 200 250 300 350 400 425 450 500 550
+
+label loop
+
+# Restore initial atomic positions before each minimization
+set group all x v_stored_x y v_stored_y z v_stored_z
+
+# Per-iteration force variables (deleted at end of loop body)
+variable fconv    equal v_stress*v_surface_area*v_mpa_conversion
+variable fval_top equal  v_fconv/v_ntop
+variable fval_bot equal -(v_fconv/v_nbottom)
+
+fix forcetop    top    addforce 0.0 ${fval_top} 0.0
+fix forcebottom bottom addforce 0.0 ${fval_bot} 0.0
+
+fix freeze_top    top    setforce 0 NULL 0
+fix freeze_bottom bottom setforce 0 NULL 0
+
+fix_modify forcetop    energy yes
+fix_modify forcebottom energy yes
+
 minimize 0 1e-10 10000 10000
 
-
-fix_modify forcetop energy no
+fix_modify forcetop    energy no
 fix_modify forcebottom energy no
 
 reset_timestep 0
 
-# 1. Define the normalized energy variable
 variable pe_per_atom equal pe/atoms
 
-
-# 2. Print the variable to your YAML file
 fix extra all print 1 """
-- stress: ${sigxy}
+- stress: ${stress}
 - energy: ${pe_per_atom}
 """ append energy.yaml screen no title ""
 
-print "${surface_size}"
-print "${surface_area}"
-print "${ntop}"
-print "${nbottom}"
+dump 1 all custom 1 dump/dump_${stress}.* id type x y z
 
 run 0
+
+# ---------- Cleanup for next iteration ---------------------
+unfix forcetop
+unfix forcebottom
+unfix freeze_top
+unfix freeze_bottom
+unfix extra
+undump 1
+variable fconv       delete
+variable fval_top    delete
+variable fval_bot    delete
+variable pe_per_atom delete
+
+next stress
+jump SELF loop

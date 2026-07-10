@@ -1,9 +1,5 @@
-rm energy.yaml
+rm -f energy.yaml
 rm -f peierlsstress.out
+mkdir -p dump
 
-for i in    200 250 300 350 400 425 450 500 550 ;
-do
-
-   mpirun -np 128 lmp -in applystress.in -var stress $i >> peierlsstress.out
-
-done
+mpirun -np 128 lmp -in applystress.in >> peierlsstress.out
